@@ -1,0 +1,84 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define SIZE 10
+
+struct Entry {
+    char name[100];
+    char phone[15];
+    struct Entry* next;
+};
+
+struct Entry* hashTable[SIZE];
+
+int hashFunction(char* name) {
+    int sum = 0;
+    for (int i = 0; name[i] != '\0'; i++)
+        sum += name[i];
+    return sum % SIZE;
+}
+
+void insert(char* name, char* phone) {
+    int index = hashFunction(name);
+    struct Entry* newEntry = (struct Entry*)malloc(sizeof(struct Entry));
+    strcpy(newEntry->name, name);
+    strcpy(newEntry->phone, phone);
+    newEntry->next = hashTable[index];
+    hashTable[index] = newEntry;
+}
+
+void search(char* name) {
+    int index = hashFunction(name);
+    struct Entry* temp = hashTable[index];
+    while (temp) {
+        if (strcmp(temp->name, name) == 0) {
+            printf("Found: %s - %s\n", temp->name, temp->phone);
+            return;
+        }
+        temp = temp->next;
+    }
+    printf("Not Found\n");
+}
+
+void display() {
+    for (int i = 0; i < SIZE; i++) {
+        struct Entry* temp = hashTable[i];
+        if (temp) {
+            printf("Index %d:\n", i);
+            while (temp) {
+                printf("  %s - %s\n", temp->name, temp->phone);
+                temp = temp->next;
+            }
+        }
+    }
+}
+
+int main() {
+    int choice;
+    char name[100], phone[15];
+
+    while (1) {
+        printf("\n1. Insert\n2. Search\n3. Display\n4. Exit\nEnter choice: ");
+        scanf("%d", &choice);
+        switch (choice) {
+            case 1:
+                printf("Enter name: ");
+                scanf("%s", name);
+                printf("Enter phone: ");
+                scanf("%s", phone);
+                insert(name, phone);
+                break;
+            case 2:
+                printf("Enter name to search: ");
+                scanf("%s", name);
+                search(name);
+                break;
+            case 3:
+                display();
+                break;
+            case 4:
+                return 0;
+        }
+    }
+}

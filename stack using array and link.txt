@@ -1,0 +1,75 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 100
+
+int stack[SIZE];
+int top = -1;
+
+void push_array(int value) {
+    if (top == SIZE - 1)
+        printf("Overflow\n");
+    else
+        stack[++top] = value;
+}
+
+void pop_array() {
+    if (top == -1)
+        printf("Underflow\n");
+    else
+        top--;
+}
+
+void display_array() {
+    for (int i = top; i >= 0; i--)
+        printf("%d ", stack[i]);
+    printf("\n");
+}
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node* topNode = NULL;
+
+void push_linked(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = topNode;
+    topNode = newNode;
+}
+
+void pop_linked() {
+    if (topNode == NULL)
+        return;
+    struct Node* temp = topNode;
+    topNode = topNode->next;
+    free(temp);
+}
+
+void display_linked() {
+    struct Node* temp = topNode;
+    while (temp) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    push_array(10);
+    push_array(20);
+    push_array(30);
+    display_array();
+    pop_array();
+    display_array();
+
+    push_linked(100);
+    push_linked(200);
+    push_linked(300);
+    display_linked();
+    pop_linked();
+    display_linked();
+
+    return 0;
+}

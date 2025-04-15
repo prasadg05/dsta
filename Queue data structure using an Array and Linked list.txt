@@ -1,0 +1,88 @@
+#include <stdio.h>
+#include <stdlib.h>
+#define SIZE 100
+
+int queue[SIZE];
+int front = -1, rear = -1;
+
+void enqueue_array(int value) {
+    if (rear == SIZE - 1)
+        printf("Overflow\n");
+    else {
+        if (front == -1) front = 0;
+        queue[++rear] = value;
+    }
+}
+
+void dequeue_array() {
+    if (front == -1 || front > rear)
+        printf("Underflow\n");
+    else
+        front++;
+}
+
+void display_array() {
+    if (front == -1 || front > rear)
+        printf("Empty\n");
+    else {
+        for (int i = front; i <= rear; i++)
+            printf("%d ", queue[i]);
+        printf("\n");
+    }
+}
+
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+struct Node *frontNode = NULL, *rearNode = NULL;
+
+void enqueue_linked(int value) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = value;
+    newNode->next = NULL;
+    if (rearNode == NULL) {
+        frontNode = rearNode = newNode;
+    } else {
+        rearNode->next = newNode;
+        rearNode = newNode;
+    }
+}
+
+void dequeue_linked() {
+    if (frontNode == NULL)
+        return;
+    struct Node* temp = frontNode;
+    frontNode = frontNode->next;
+    if (frontNode == NULL)
+        rearNode = NULL;
+    free(temp);
+}
+
+void display_linked() {
+    struct Node* temp = frontNode;
+    while (temp) {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    }
+    printf("\n");
+}
+
+int main() {
+    enqueue_array(10);
+    enqueue_array(20);
+    enqueue_array(30);
+    display_array();
+    dequeue_array();
+    display_array();
+
+    enqueue_linked(100);
+    enqueue_linked(200);
+    enqueue_linked(300);
+    display_linked();
+    dequeue_linked();
+    display_linked();
+
+    return 0;
+}
